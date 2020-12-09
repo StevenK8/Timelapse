@@ -20,7 +20,7 @@
         android:layout_marginBottom="202dp"
         android:layout_toStartOf="@+id/button2"
         android:layout_toLeftOf="@+id/button2"
-        android:text="Button" />
+        android:text="test1" />
 
     <Button
         android:id="@+id/button2"
@@ -32,5 +32,5 @@
         android:layout_marginEnd="66dp"
         android:layout_marginRight="74dp"
         android:layout_marginBottom="202dp"
-        android:text="Button" />
+        android:text="test2" />
 </RelativeLayout>
