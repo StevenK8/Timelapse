@@ -8,6 +8,7 @@
 
     <Button
         android:id="@+id/button3"
+        android:onClick="clickBtn3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -18,8 +19,6 @@
         android:layout_marginEnd="93dp"
         android:layout_marginRight="93dp"
         android:layout_marginBottom="202dp"
-        android:layout_toStartOf="@+id/button2"
-        android:layout_toLeftOf="@+id/button2"
         android:text="@string/button3" />
 
     <Button
@@ -41,9 +40,10 @@
         android:layout_above="@+id/button3"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginEnd="175dp"
-        android:layout_marginRight="175dp"
-        android:layout_marginBottom="120dp"
-        android:text="@string/text_page_2" />
+        android:layout_marginEnd="119dp"
+        android:layout_marginRight="119dp"
+        android:layout_marginBottom="114dp"
+        android:text="@string/text_page_2"
+        android:textSize="50" />
 
 </RelativeLayout>

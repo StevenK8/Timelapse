@@ -17,10 +17,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //voir dans le xml activity_main.xml "button1:onClick"
-    public void clickButton1(View v){
-        Toast t = Toast.makeText(getApplicationContext(),
-                "Bouton 1",
-                Toast.LENGTH_SHORT);
-        t.show();
+    public void clickBtn1(View v){
+        setContentView(R.layout.activity_page2);
+    }
+    public void clickBtn3(View v){
+        setContentView(R.layout.activity_main);
     }
 }
