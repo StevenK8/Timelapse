@@ -18,5 +18,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center_horizontal" />
+
+    <Button
+        android:id="@+id/boutonGo"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="@string/boutonLancement"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_home" />
 </androidx.constraintlayout.widget.ConstraintLayout>
