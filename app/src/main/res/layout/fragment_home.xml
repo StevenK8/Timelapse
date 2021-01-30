@@ -30,7 +30,10 @@
         app:layout_constraintStart_toStartOf="@+id/textView3"
         app:layout_constraintTop_toBottomOf="@+id/descriptionAlbum"
         app:layout_constraintVertical_bias="0.046"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey"
+        android:backgroundTint="@color/black" />
 
     <EditText
         android:id="@+id/descriptionAlbum"
@@ -44,7 +47,10 @@
         app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.232" />
+        app:layout_constraintVertical_bias="0.232"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey"
+        android:backgroundTint="@color/black" />
 
     <EditText
         android:id="@+id/shutterSpeed"
@@ -59,7 +65,10 @@
         app:layout_constraintStart_toStartOf="@+id/textView7"
         app:layout_constraintTop_toBottomOf="@+id/iso"
         app:layout_constraintVertical_bias="0.227"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey"
+        android:backgroundTint="@color/black" />
 
     <EditText
         android:id="@+id/rotation"
@@ -73,22 +82,28 @@
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/interval"
-        app:layout_constraintVertical_bias="0.07" />
+        app:layout_constraintVertical_bias="0.07"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey"
+        android:backgroundTint="@color/black" />
 
     <EditText
         android:id="@+id/interval"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="number"
         android:hint="1"
+        android:inputType="number"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey"
         app:layout_constraintBottom_toTopOf="@+id/boutonGo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/length"
         app:layout_constraintVertical_bias="0.064"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:backgroundTint="@color/black"/>
 
     <Switch
         android:id="@+id/switch1"
@@ -101,7 +116,8 @@
         app:layout_constraintHorizontal_bias="0.46"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shutterSpeed"
-        app:layout_constraintVertical_bias="0.648" />
+        app:layout_constraintVertical_bias="0.648"
+        android:textColor="@color/black"  />
 
     <EditText
         android:id="@+id/iso"
@@ -116,7 +132,10 @@
         app:layout_constraintStart_toStartOf="@+id/textView6"
         app:layout_constraintTop_toBottomOf="@+id/rotation"
         app:layout_constraintVertical_bias="0.092"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey"
+        android:backgroundTint="@color/black" />
 
     <TextView
         android:id="@+id/textView2"
@@ -128,7 +147,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHorizontal_bias="0.067"
-        app:layout_constraintVertical_bias="0.172" />
+        app:layout_constraintVertical_bias="0.172"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/textView3"
@@ -140,7 +160,8 @@
         app:layout_constraintHorizontal_bias="0.067"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.073" />
+        app:layout_constraintVertical_bias="0.073"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/textView4"
@@ -152,7 +173,8 @@
         app:layout_constraintHorizontal_bias="0.067"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:layout_constraintVertical_bias="0.084" />
+        app:layout_constraintVertical_bias="0.084"
+        android:textColor="@color/black"  />
 
     <TextView
         android:id="@+id/textView5"
@@ -164,7 +186,8 @@
         app:layout_constraintHorizontal_bias="0.067"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:layout_constraintVertical_bias="0.089" />
+        app:layout_constraintVertical_bias="0.089"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/textView6"
@@ -176,7 +199,8 @@
         app:layout_constraintHorizontal_bias="0.067"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5"
-        app:layout_constraintVertical_bias="0.084" />
+        app:layout_constraintVertical_bias="0.084"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/textView7"
@@ -188,6 +212,7 @@
         app:layout_constraintHorizontal_bias="0.067"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6"
-        app:layout_constraintVertical_bias="0.136" />
+        app:layout_constraintVertical_bias="0.136"
+        android:textColor="@color/black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
