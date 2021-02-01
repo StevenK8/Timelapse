@@ -96,6 +96,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                         + "&"  + urlShutterSpeed + shutterSpeed.getText()
                         + "&"  + urlAutoWhiteBalance + autoWhiteBalance.isChecked()
                         + "&"  + urlDescription + desc.getText()
+                        + "&"  + "width=2592&height=1944"
                         + "&"  + urlAccessToken;
                StringRequest stringRequest = new StringRequest(Request.Method.GET, urlLancement,
                         new Response.Listener<String>() {
