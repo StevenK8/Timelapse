@@ -1,4 +1,4 @@
-package com.example.timelapse.ui.home;
+package com.example.timelapse;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,30 +7,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.android.volley.*;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.timelapse.MainActivity;
-import com.example.timelapse.R;
 
-import java.io.IOException;
-
-import okhttp3.*;
 
 public class HomeFragment extends Fragment implements View.OnClickListener{
 
-    private HomeViewModel homeViewModel;
     View root;
 
     private String url = "http://ryzen.ddns.net:8000/";
@@ -53,11 +45,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     EditText shutterSpeed;
     Switch autoWhiteBalance;
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
         root = inflater.inflate(R.layout.fragment_home, container, false);
         Button b = root.findViewById(R.id.boutonGo);
         b.setOnClickListener(this);
@@ -72,15 +63,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
 
         EditText description = root.findViewById(R.id.descriptionAlbum);
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-            }
-        });
         return root;
     }
-
-
 
     @Override
     public void onClick(View v) {
@@ -98,7 +82,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                         + "&"  + urlDescription + desc.getText()
                         + "&"  + "width=2592&height=1944"
                         + "&"  + urlAccessToken;
-               StringRequest stringRequest = new StringRequest(Request.Method.GET, urlLancement,
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, urlLancement,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {

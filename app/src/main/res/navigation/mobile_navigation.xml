@@ -15,12 +15,12 @@
         android:id="@+id/navigation_graphique"
         android:name="com.example.timelapse.ui.graphique.GraphiqueFragment"
         android:label="@string/title_graphique"
-        tools:layout="@layout/fragment_galerie" />
+        tools:layout="@layout/fragment_graphique" />
 
     <fragment
         android:id="@+id/navigation_galerie"
         android:name="com.example.timelapse.ui.galerie.GalerieFragment"
         android:label="@string/title_galerie"
-        tools:layout="@layout/fragment_graphique" />
+        tools:layout="@layout/fragment_galerie" />
 
 </navigation>
