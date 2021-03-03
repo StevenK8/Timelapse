@@ -36,26 +36,26 @@ public class GalerieFragment extends Fragment{
         show.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Task().execute();
+                //new Task().execute();
             }
         });
 
 
-        Reglage.setOnClickListener(new View.OnClickListener() {
+        /*Reglage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.fragment_container, new ReglagesPage());
                 fr.commit();
             }
-        });
+        });*/
         return root;
     }
     class Task extends AsyncTask<Void, Void, Void>{
         String records = "";
         @Override
         protected Void doInBackground(Void... voids){
-            try {
+           try {
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection connection = DriverManager.getConnection("jdbc:mysql://ryzen.ddns.net:3306", "timelapse", "9_7b:r%HR-G%y@*U;>*3KDrU!-v,65U]Wq6H.xT5G}uiPAE}8k");
 
@@ -65,7 +65,7 @@ public class GalerieFragment extends Fragment{
 
                 while(resultSet.next()) {
 
-                    records += resultSet.getString(1) /*+ " " + resultSet.getString(2)*/ + "\n";
+                    records += resultSet.getString(1) + " " + resultSet.getString(2) + "\n";
 
                 }
             }
