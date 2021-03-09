@@ -7,17 +7,28 @@
     tools:context="GalerieFragment"
     android:background="@drawable/fondappli">
 
-    <ImageButton
-        android:id="@+id/reglage_button"
-        android:layout_width="49dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="36dp"
-        android:layout_marginRight="36dp"
-        android:background="@color/white"
-        android:src="@drawable/ic_reglage_button"
+    <TextView
+        android:id="@+id/textViewSQL"
+        android:layout_width="375dp"
+        android:layout_height="272dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.444"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSQL"
+        app:layout_constraintVertical_bias="0.198" />
+
+    <Button
+        android:id="@+id/buttonSQL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.464"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="reglage" />
+        app:layout_constraintVertical_bias="0.181" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
