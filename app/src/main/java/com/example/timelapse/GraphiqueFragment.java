@@ -27,6 +27,10 @@ import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 
@@ -38,6 +42,9 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
     private LineGraphSeries<DataPoint> mSeries;
     private double graphLastXValue = -1d;
     Button b;
+    ArrayList<Float> temperatureList = new ArrayList<>();
+    ArrayList<Float> humiditeList = new ArrayList<>();
+    ArrayList<String> dateList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -111,12 +118,28 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
         switch (v.getId()) {
             case R.id.actualiser:
                 RequestQueue queue = Volley.newRequestQueue(getContext());
-                String myurl = "https://fastapi.stevenkerautret.eu";
+                String myurl = "https://fastapi.stevenkerautret.eu/th?first_date=2021-03-03&last_date=2021-03-04&access_token=F%3E%3Caw%3Bv)9H4JRY%3D4%23g%40%7DYN68b%24%256!j9F8g%3DV2%5EKr%5E8s%3A(%5BN7(%5D";
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, myurl,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-                                Toast.makeText(getContext(), response.toString(), Toast.LENGTH_LONG).show();
+                                //Toast.makeText(getContext(), response.toString(), Toast.LENGTH_LONG).show();
+                                try {
+                                    JSONArray array = new JSONArray(response);
+                                    for(int i = 0; i < array.length(); i++){
+                                        String parts[] = array.get(i).toString().split(",");
+                                        for(int j = 0; j < 3; j++){
+                                            parts[j] = parts[j].replace("[", "");
+                                            parts[j] = parts[j].replace("]", "");
+                                            parts[j] = parts[j].replace("\"", "");
+                                        }
+                                        temperatureList.add(Float.valueOf(parts[0].toString()));
+                                        humiditeList.add(Float.valueOf(parts[1].toString()));
+                                        dateList.add(parts[2].toString());
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }, new Response.ErrorListener() {
                     @Override
