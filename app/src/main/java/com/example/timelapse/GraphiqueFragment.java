@@ -10,21 +10,34 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.graphics.Color;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.util.ArrayList;
 
-public class GraphiqueFragment extends Fragment {
+
+public class GraphiqueFragment extends Fragment implements View.OnClickListener{
 
     View root;
     SeekBar seekBar;
     GraphView graph;
     private LineGraphSeries<DataPoint> mSeries;
     private double graphLastXValue = -1d;
+    Button b;
 
     @Nullable
     @Override
@@ -32,6 +45,8 @@ public class GraphiqueFragment extends Fragment {
         root =  inflater.inflate(R.layout.fragment_graphique, container, false);
 
         seekBar = (SeekBar) root.findViewById(R.id.seekBar);
+        b = root.findViewById(R.id.actualiser);
+        b.setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -86,8 +101,32 @@ public class GraphiqueFragment extends Fragment {
         //graph.getViewport().setScrollable(true); // enables horizontal scrolling
         //graph.getViewport().setScrollableY(true); // enables vertical scrolling
 
+
         return root;
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.actualiser:
+                RequestQueue queue = Volley.newRequestQueue(getContext());
+                String myurl = "https://fastapi.stevenkerautret.eu";
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, myurl,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Toast.makeText(getContext(), response.toString(), Toast.LENGTH_LONG).show();
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getContext(), "nope", Toast.LENGTH_LONG).show();
+                    }
+                });
+                queue.add(stringRequest);
+                queue.start();
+                break;
+        }
+    }
 }

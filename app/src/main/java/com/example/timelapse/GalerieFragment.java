@@ -62,12 +62,13 @@ public class GalerieFragment extends Fragment implements View.OnClickListener{
         switch(v.getId()){
             case R.id.buttonSQL:
                 RequestQueue queue = Volley.newRequestQueue(getContext());
-                String myurl= "http://91.174.199.48:49154";
+                String myurl= "https://fastapi.stevenkerautret.eu";
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, myurl,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 Toast.makeText(getContext(), response.toString(), Toast.LENGTH_LONG).show();
+                                texte.setText(response.toString());
                             }
                         }, new Response.ErrorListener() {
                     @Override
