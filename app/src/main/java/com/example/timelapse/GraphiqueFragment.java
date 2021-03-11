@@ -1,6 +1,8 @@
 package com.example.timelapse;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.graphics.Color;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -29,19 +29,26 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
+
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class GraphiqueFragment extends Fragment implements View.OnClickListener{
 
     View root;
-    SeekBar seekBar;
+    //SeekBar seekBar;
     GraphView graph;
-    private LineGraphSeries<DataPoint> mSeries;
-    private double graphLastXValue = -1d;
+    LineGraphSeries<DataPoint> mSeries;
+    //private double graphLastXValue = -1d;
     Button b;
+
+    EditText dateDeb;
+    EditText dateFin;
+    DatePickerDialog pickerDeb;
+    DatePickerDialog pickerFin;
+
     ArrayList<Float> temperatureList = new ArrayList<>();
     ArrayList<Float> humiditeList = new ArrayList<>();
     ArrayList<String> dateList = new ArrayList<>();
@@ -51,10 +58,17 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root =  inflater.inflate(R.layout.fragment_graphique, container, false);
 
-        seekBar = (SeekBar) root.findViewById(R.id.seekBar);
+        dateDeb = root.findViewById(R.id.dateDeb);
+        dateFin = root.findViewById(R.id.dateFin);
+        //seekBar = root.findViewById(R.id.seekBar);
         b = root.findViewById(R.id.actualiser);
         b.setOnClickListener(this);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        dateDeb.setOnClickListener(this);
+        dateFin.setOnClickListener(this);
+        dateDeb.setInputType(InputType.TYPE_NULL);
+        dateFin.setInputType(InputType.TYPE_NULL);
+
+        /*seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
@@ -69,24 +83,12 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
                 mSeries.appendData(new DataPoint(graphLastXValue, progress), true, 40);
                 System.out.println("<Dessin> progress : " + progress);
             }
-        });
+        });*/
 
-        graph = (GraphView) root.findViewById(R.id.graph);
-        // Exemple 1
-        /*LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6)
-        });
-        graph.addSeries(series);*/
+        graph = root.findViewById(R.id.graph);
 
 
-        // Exemple 3 : avec la seekbar
-        graph.setTitle("Graphique temps");
-        graph.setTitleTextSize(40);
-        graph.setTitleColor(Color.BLUE);
+        // Exemple 3 :
 
         mSeries = new LineGraphSeries<>();
         graph.addSeries(mSeries);
@@ -133,9 +135,9 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
                                             parts[j] = parts[j].replace("]", "");
                                             parts[j] = parts[j].replace("\"", "");
                                         }
-                                        temperatureList.add(Float.valueOf(parts[0].toString()));
-                                        humiditeList.add(Float.valueOf(parts[1].toString()));
-                                        dateList.add(parts[2].toString());
+                                        temperatureList.add(Float.valueOf(parts[0])); //changement string en float
+                                        humiditeList.add(Float.valueOf(parts[1]));   //changement string en float
+                                        dateList.add(parts[2]);                      //parsing de la date
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -149,6 +151,34 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
                 });
                 queue.add(stringRequest);
                 queue.start();
+                break;
+
+            case R.id.dateDeb:
+                final Calendar cldrDeb = Calendar.getInstance();
+                int dayDeb = cldrDeb.get(Calendar.DAY_OF_MONTH);
+                int monthDeb = cldrDeb.get(Calendar.MONTH);
+                int yearDeb = cldrDeb.get(Calendar.YEAR);
+                pickerDeb = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        dateDeb.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                    }
+                }, yearDeb, monthDeb, dayDeb);
+                pickerDeb.show();
+                break;
+
+            case R.id.dateFin:
+                final Calendar cldrFin = Calendar.getInstance();
+                int day = cldrFin.get(Calendar.DAY_OF_MONTH);
+                int month = cldrFin.get(Calendar.MONTH);
+                int year = cldrFin.get(Calendar.YEAR);
+                pickerFin = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        dateFin.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                    }
+                }, year, month, day);
+                pickerFin.show();
                 break;
         }
     }

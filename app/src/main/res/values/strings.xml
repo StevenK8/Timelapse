@@ -4,4 +4,6 @@
     <string name="title_galerie">Galerie</string>
     <string name="title_graphique">Graphique</string>
     <string name="boutonLancement">Demarrer timelapse</string>
+    <string name="Hintdatedeb">Date debut</string>
+    <string name="Hintdatefin">Date debut</string>
 </resources>
