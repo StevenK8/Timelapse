@@ -50,14 +50,9 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
     LineGraphSeries<DataPoint> mSeries;
     //private double graphLastXValue = -1d;
     Button b;
-    Button t;
-
-    EditText re;
 
     EditText dateDeb;
     EditText dateFin;
-    DatePickerDialog pickerDeb;
-    DatePickerDialog pickerFin;
 
     ArrayList<Float> temperatureList = new ArrayList<>();
     ArrayList<Float> humiditeList = new ArrayList<>();
@@ -71,9 +66,6 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
 
         b = root.findViewById(R.id.actualiser);
         b.setOnClickListener(this);
-        t = root.findViewById(R.id.test);
-        t.setOnClickListener(this);
-        re = root.findViewById(R.id.retour);
 
         dateDeb = root.findViewById(R.id.dateDeb);
         dateFin = root.findViewById(R.id.dateFin);
@@ -109,11 +101,8 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
         return root;
     }
 
-    public String parseDate(Date time) {
-        DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-        String strDate = dateFormat.format(time);
-
-        String inputPattern = "dd-MMM-yyyy";
+    public String parseDate(String time) {
+        String inputPattern = "dd/MM/yyyy";
         String outputPattern = "yyyy-MM-dd";
         SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
         SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
@@ -121,7 +110,24 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
         String str = null;
 
         try {
-            date = inputFormat.parse(strDate);
+            date = inputFormat.parse(time);
+            str = outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+
+    public String parseDate2(String time) {
+        String inputPattern = "dd/MM/yyyy";
+        String outputPattern = "dd/MM/yyyy";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+        Date date = null;
+        String str = null;
+
+        try {
+            date = inputFormat.parse(time);
             str = outputFormat.format(date);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -136,7 +142,7 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
             //Requete lors du clique sur le bouton actualiser
             case R.id.actualiser:
                 RequestQueue queue = Volley.newRequestQueue(getContext());
-                String myurl = "https://fastapi.stevenkerautret.eu/th?first_date=2021-03-03&last_date=2021-03-04&access_token=F%3E%3Caw%3Bv)9H4JRY%3D4%23g%40%7DYN68b%24%256!j9F8g%3DV2%5EKr%5E8s%3A(%5BN7(%5D";
+                String myurl = "https://fastapi.stevenkerautret.eu/th?first_date=" + parseDate(dateDeb.getText().toString()) + "&last_date=" + parseDate(dateFin.getText().toString()) + "&access_token=F%3E%3Caw%3Bv)9H4JRY%3D4%23g%40%7DYN68b%24%256!j9F8g%3DV2%5EKr%5E8s%3A(%5BN7(%5D";
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, myurl,
                         new Response.Listener<String>() {
                             @Override
@@ -167,6 +173,10 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
                 });
                 queue.add(stringRequest);
                 queue.start();
+                for(int i =  0; i < temperatureList.size(); i++){
+                    String a = dateList.get(i);
+                    Toast.makeText(getContext(), "valeur: " + a, Toast.LENGTH_LONG).show();
+                }
                 break;
 
                 //generation des calendriers
@@ -175,32 +185,39 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
                 int dayDeb = cldrDeb.get(Calendar.DAY_OF_MONTH);
                 int monthDeb = cldrDeb.get(Calendar.MONTH);
                 int yearDeb = cldrDeb.get(Calendar.YEAR);
-                pickerDeb = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                // Date Select Listener.
+                DatePickerDialog.OnDateSetListener dateSetListenerDeb = new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        dateDeb.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        String time = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
+                        dateDeb.setText(parseDate2(time));
                     }
-                }, yearDeb, monthDeb, dayDeb);
-                pickerDeb.show();
+                };
+                // Create DatePickerDialog (Spinner Mode):
+                DatePickerDialog datePickerDialogDeb = new DatePickerDialog(getContext(), dateSetListenerDeb, yearDeb, monthDeb, dayDeb);
+                // Show
+                datePickerDialogDeb.show();
                 break;
 
             case R.id.dateFin:
                 final Calendar cldrFin = Calendar.getInstance();
-                int day = cldrFin.get(Calendar.DAY_OF_MONTH);
-                int month = cldrFin.get(Calendar.MONTH);
-                int year = cldrFin.get(Calendar.YEAR);
-                pickerFin = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                int dayfin = cldrFin.get(Calendar.DAY_OF_MONTH);
+                int monthfin = cldrFin.get(Calendar.MONTH);
+                int yearfin = cldrFin.get(Calendar.YEAR);
+                // Date Select Listener.
+                DatePickerDialog.OnDateSetListener dateSetListenerFin = new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        dateFin.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        String time = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
+                        dateFin.setText(parseDate2(time));
                     }
-                }, year, month, day);
-                pickerFin.show();
-                break;
-
-            case R.id.test:
-                re.setText(dateDeb.getText());
-                Toast.makeText(getContext(), dateDeb.getText(), Toast.LENGTH_LONG).show();
+                };
+                // Create DatePickerDialog (Spinner Mode):
+                DatePickerDialog datePickerDialogFin = new DatePickerDialog(getContext(), dateSetListenerFin, yearfin, monthfin, dayfin);
+                // Show
+                datePickerDialogFin.show();
                 break;
 
         }

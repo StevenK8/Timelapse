@@ -1,4 +1,4 @@
-package com.example.timelapse;
+/*package com.example.timelapse;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,6 +32,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.zip.ZipFile;
 
 
 public class GalerieFragment extends Fragment implements View.OnClickListener{
@@ -50,19 +51,19 @@ public class GalerieFragment extends Fragment implements View.OnClickListener{
         ImageButton Reglage = (ImageButton) root.findViewById(R.id.reglage_button);
 
         texte = root.findViewById(R.id.textViewSQL);
-        b = root.findViewById(R.id.buttonSQL);
+       // b = root.findViewById(R.id.buttonSQL);
         b.setOnClickListener(this);
 
 
         return root;
     }
 
-    @Override
+   /* @Override
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.buttonSQL:
                 RequestQueue queue = Volley.newRequestQueue(getContext());
-                String myurl= "https://fastapi.stevenkerautret.eu";
+                String myurl= "https://fastapi.stevenkerautret.eu/album";
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, myurl,
                         new Response.Listener<String>() {
                             @Override
@@ -81,6 +82,6 @@ public class GalerieFragment extends Fragment implements View.OnClickListener{
                 break;
         }
     }
-}
+}*/
 
 
