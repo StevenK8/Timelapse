@@ -1,6 +1,7 @@
 package com.example.timelapse;
 
 import android.app.DatePickerDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import android.widget.Button;
@@ -31,6 +33,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -38,11 +42,13 @@ import java.util.Calendar;
 public class GraphiqueFragment extends Fragment implements View.OnClickListener{
 
     View root;
-    //SeekBar seekBar;
     GraphView graph;
     LineGraphSeries<DataPoint> mSeries;
     //private double graphLastXValue = -1d;
     Button b;
+    Button t;
+
+    EditText re;
 
     EditText dateDeb;
     EditText dateFin;
@@ -58,46 +64,31 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root =  inflater.inflate(R.layout.fragment_graphique, container, false);
 
-        dateDeb = root.findViewById(R.id.dateDeb);
-        dateFin = root.findViewById(R.id.dateFin);
-        //seekBar = root.findViewById(R.id.seekBar);
+
         b = root.findViewById(R.id.actualiser);
         b.setOnClickListener(this);
+        t = root.findViewById(R.id.test);
+        t.setOnClickListener(this);
+        re = root.findViewById(R.id.retour);
+
+        dateDeb = root.findViewById(R.id.dateDeb);
+        dateFin = root.findViewById(R.id.dateFin);
         dateDeb.setOnClickListener(this);
         dateFin.setOnClickListener(this);
         dateDeb.setInputType(InputType.TYPE_NULL);
         dateFin.setInputType(InputType.TYPE_NULL);
 
-        /*seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                graphLastXValue += 1d;
-                mSeries.appendData(new DataPoint(graphLastXValue, progress), true, 40);
-                System.out.println("<Dessin> progress : " + progress);
-            }
-        });*/
-
         graph = root.findViewById(R.id.graph);
 
-
-        // Exemple 3 :
 
         mSeries = new LineGraphSeries<>();
         graph.addSeries(mSeries);
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinY(0);
-        graph.getViewport().setMaxY(100);
+        graph.getViewport().setMaxY(50);
         graph.getViewport().setMinX(0);
-        graph.getViewport().setMaxX(40);
+        graph.getViewport().setMaxX(10);
 
         // Légende
         mSeries.setTitle("temperature");
@@ -114,10 +105,20 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
         return root;
     }
 
+    /*@RequiresApi(api = Build.VERSION_CODES.O)
+    String transfodeb(){
+        String dates = String.valueOf(dateDeb.getText());
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime datem = LocalDateTime.parse(dates);
+        String datef = String.valueOf(datem);
+        return datef;
+    }*/
+
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            //Requete lors du clique sur le bouton actualiser
             case R.id.actualiser:
                 RequestQueue queue = Volley.newRequestQueue(getContext());
                 String myurl = "https://fastapi.stevenkerautret.eu/th?first_date=2021-03-03&last_date=2021-03-04&access_token=F%3E%3Caw%3Bv)9H4JRY%3D4%23g%40%7DYN68b%24%256!j9F8g%3DV2%5EKr%5E8s%3A(%5BN7(%5D";
@@ -153,6 +154,7 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
                 queue.start();
                 break;
 
+                //generation des calendriers
             case R.id.dateDeb:
                 final Calendar cldrDeb = Calendar.getInstance();
                 int dayDeb = cldrDeb.get(Calendar.DAY_OF_MONTH);
@@ -180,6 +182,12 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
                 }, year, month, day);
                 pickerFin.show();
                 break;
+
+            case R.id.test:
+                re.setText(dateDeb.getText());
+                Toast.makeText(getContext(), dateDeb.getText(), Toast.LENGTH_LONG).show();
+                break;
+
         }
     }
 }
