@@ -33,10 +33,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class GraphiqueFragment extends Fragment implements View.OnClickListener{
@@ -105,14 +109,25 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
         return root;
     }
 
-    /*@RequiresApi(api = Build.VERSION_CODES.O)
-    String transfodeb(){
-        String dates = String.valueOf(dateDeb.getText());
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime datem = LocalDateTime.parse(dates);
-        String datef = String.valueOf(datem);
-        return datef;
-    }*/
+    public String parseDate(Date time) {
+        DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+        String strDate = dateFormat.format(time);
+
+        String inputPattern = "dd-MMM-yyyy";
+        String outputPattern = "yyyy-MM-dd";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+        Date date = null;
+        String str = null;
+
+        try {
+            date = inputFormat.parse(strDate);
+            str = outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
 
 
     @Override
