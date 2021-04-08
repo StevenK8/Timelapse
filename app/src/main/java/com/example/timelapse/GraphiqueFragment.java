@@ -1,6 +1,7 @@
 package com.example.timelapse;
 
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
@@ -40,6 +41,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 
 
@@ -47,8 +49,8 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
 
     View root;
     GraphView graph;
-    LineGraphSeries<DataPoint> mSeries;
-    //private double graphLastXValue = -1d;
+    LineGraphSeries<DataPoint> tempserie = new LineGraphSeries<>();
+    LineGraphSeries<DataPoint> humidserie = new LineGraphSeries<>();
     Button b;
 
     EditText dateDeb;
@@ -77,31 +79,32 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
         graph = root.findViewById(R.id.graph);
 
 
-        mSeries = new LineGraphSeries<>();
-        graph.addSeries(mSeries);
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinY(0);
         graph.getViewport().setMaxY(50);
         graph.getViewport().setMinX(0);
-        graph.getViewport().setMaxX(10);
+        graph.getViewport().setMaxX(100);
+        graph.getSecondScale();
+        graph.getSecondScale().setMinY(0);
+        graph.getSecondScale().setMaxY(100);
 
-        // Légende
-        mSeries.setTitle("temperature");
+
         graph.getLegendRenderer().setVisible(true);
-        graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+        graph.getLegendRenderer().setFixedPosition(0,0);
 
         // Zooming and scrolling
         //graph.getViewport().setScalable(true); // enables horizontal zooming and scrolling
         //graph.getViewport().setScalableY(true); // enables vertical zooming and scrolling
-        //graph.getViewport().setScrollable(true); // enables horizontal scrolling
-        //graph.getViewport().setScrollableY(true); // enables vertical scrolling
+        graph.getViewport().setScrollable(true); // enables horizontal scrolling
+        graph.getViewport().setScrollableY(true); // enables vertical scrolling
+
 
 
         return root;
     }
 
-    public String parseDate(String time) {
+    public String parseDate(String time) { //changement du format de date pour l'envoie de la requete
         String inputPattern = "dd/MM/yyyy";
         String outputPattern = "yyyy-MM-dd";
         SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
@@ -118,7 +121,7 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
         return str;
     }
 
-    public String parseDate2(String time) {
+    public String parseDate2(String time) { // changement du format de la date pour l'affichage
         String inputPattern = "dd/MM/yyyy";
         String outputPattern = "dd/MM/yyyy";
         SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
@@ -133,6 +136,46 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
             e.printStackTrace();
         }
         return str;
+    }
+
+    public DataPoint[] generateData(ArrayList<Float> list) {
+        DataPoint[] values = new DataPoint[list.size()];
+        for(int i = 0; i < list.size(); i++){
+            int x = i;
+            float y = list.get(i);
+            DataPoint v = new DataPoint(x, y);
+            values[i] = v;
+        }
+        return values;
+    }
+    public void traceGraph(ArrayList<Float> temperatureList, ArrayList<Float> humiditeList){ //permet de tracer les lines du graphs
+        graph.removeSeries(tempserie);
+        if(temperatureList.size()> 0){
+            tempserie.resetData(generateData(temperatureList));
+            /*for(int i = 0; i < temperatureList.size(); i++){
+                tempserie.appendData(new DataPoint(i,temperatureList.get(i)),true,temperatureList.size());
+            }*/
+            graph.addSeries(tempserie);
+            tempserie.setTitle("température");
+            graph.getViewport().setMinY(Collections.min(temperatureList));
+            graph.getViewport().setMaxY(Collections.max(temperatureList));
+        }
+
+        graph.getSecondScale().removeSeries(humidserie);
+        if(humiditeList.size() > 0){
+            humidserie.resetData(generateData(humiditeList));
+            /*for(int i = 0; i < humiditeList.size(); i++){
+                humidserie.appendData(new DataPoint(i,humiditeList.get(i)),true,humiditeList.size());
+            }*/
+            graph.getSecondScale().addSeries(humidserie);
+            humidserie.setTitle("humidité");
+            humidserie.setColor(Color.RED);
+            graph.getSecondScale().setMinY(Collections.min(humiditeList));
+            graph.getSecondScale().setMaxY(Collections.max(humiditeList));
+            graph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(Color.RED);
+            graph.getViewport().setMaxX(humiditeList.size());
+        }
+
     }
 
 
@@ -173,13 +216,10 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
                 });
                 queue.add(stringRequest);
                 queue.start();
-                for(int i =  0; i < temperatureList.size(); i++){
-                    String a = dateList.get(i);
-                    Toast.makeText(getContext(), "valeur: " + a, Toast.LENGTH_LONG).show();
-                }
+                traceGraph(temperatureList, humiditeList);
                 break;
 
-                //generation des calendriers
+            //generation des calendriers
             case R.id.dateDeb:
                 final Calendar cldrDeb = Calendar.getInstance();
                 int dayDeb = cldrDeb.get(Calendar.DAY_OF_MONTH);
