@@ -11,16 +11,28 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -29,12 +41,69 @@ public class downloadVideos extends Fragment {
     Button download;
 
     private static final int PERMISSION_STORAGE_CODE = 1000;
+    ArrayList<Integer> timelapseNumber = new ArrayList<>();
+    ArrayList<String> timelapseName = new ArrayList<>();
+
+
+    ListView listView;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_galerie, container, false);
         download = root.findViewById(R.id.download);
+
+
+        listView = root.findViewById(R.id.list);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, timelapseName);
+        listView.setAdapter(arrayAdapter);
+
+
+
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        String myurl= "https://fastapi.stevenkerautret.eu/albums?access_token=F%3E%3Caw%3Bv)9H4JRY%3D4%23g%40%7DYN68b%24%256!j9F8g%3DV2%5EKr%5E8s%3A(%5BN7(%5D";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, myurl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray array = new JSONArray(response);
+                            for(int i = 0; i < array.length(); i++){
+                                String parts[] = array.get(i).toString().split(",");
+                                for(int j = 0; j < 3; j++){
+                                    parts[j] = parts[j].replace("[", "");
+                                    parts[j] = parts[j].replace("]", "");
+                                    parts[j] = parts[j].replace("\"", "");
+                                }
+                                timelapseNumber.add(Integer.valueOf(parts[0]));
+                                timelapseName.add(parts[1]);
+                            }
+
+                            for(int i = 0; i < timelapseName.size(); i++){
+                                System.out.println(timelapseName.get(i) + " : " + i);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(), "nope", Toast.LENGTH_LONG).show();
+            }
+        });
+        queue.add(stringRequest);
+        queue.start();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getContext(), timelapseName.get(position), Toast.LENGTH_SHORT).show();
+                //lance la video
+            }
+        });
+
 
         download.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -80,7 +80,6 @@ public class GalerieFragmentZip extends Fragment implements Response.Listener<by
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root =  inflater.inflate(R.layout.fragment_galerie, container, false);
         download = root.findViewById(R.id.download);
-        unzip = root.findViewById(R.id.unzip);
 
         download.setOnClickListener(new OnClickListener() {
             @Override
