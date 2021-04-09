@@ -1,3 +1,4 @@
+/*
 package com.example.timelapse;
 
 import android.content.Context;
@@ -79,7 +80,6 @@ public class GalerieFragmentZip extends Fragment implements Response.Listener<by
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root =  inflater.inflate(R.layout.fragment_galerie, container, false);
-        download = root.findViewById(R.id.download);
 
         download.setOnClickListener(new OnClickListener() {
             @Override
@@ -97,10 +97,10 @@ public class GalerieFragmentZip extends Fragment implements Response.Listener<by
                 mProgressDialog.setMessage("Downloading Zip File..");
                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 mProgressDialog.setCancelable(false);
-                mProgressDialog.show();*/
+                mProgressDialog.show();
             }
         });
-        /*
+
         unzip.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,7 +112,7 @@ public class GalerieFragmentZip extends Fragment implements Response.Listener<by
                 }
             }
 
-        }); */
+        });
         return root;
     }
     @Override
@@ -126,7 +126,7 @@ public class GalerieFragmentZip extends Fragment implements Response.Listener<by
                 StringTokenizer st = new StringTokenizer(content, "=");
                 /*String arrTag = st.toString();
 
-                String filename = arrTag;*/
+                String filename = arrTag;
                 String filename = "video.mp4";
                 filename = filename.replace(":", ".");
                 Log.d("DEBUG::RESUME FILE NAME", filename);
@@ -176,17 +176,17 @@ public class GalerieFragmentZip extends Fragment implements Response.Listener<by
         Log.d("KEY_ERROR", "UNABLE TO DOWNLOAD FILE. ERROR:: "+error.getMessage());
     }
 
-    /*public void unzip() throws IOException {
+    public void unzip() throws IOException {
         mProgressDialog = new ProgressDialog(getContext());
         mProgressDialog.setMessage("Please Wait...Extracting zip file ... ");
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
         new UnZipTask().execute(zipFile, unzipLocation);
-    }*/
+    }
 
 
-    /*private class UnZipTask extends AsyncTask<String, Void, Boolean> {
+    private class UnZipTask extends AsyncTask<String, Void, Boolean> {
         @SuppressWarnings("rawtypes")
         @Override
         protected Boolean doInBackground(String... params) {
@@ -259,7 +259,7 @@ public class GalerieFragmentZip extends Fragment implements Response.Listener<by
                 throw new RuntimeException("Can not create dir " + dir);
             }
         }
-    }*/
+    }
 
     protected boolean shouldAskPermissions() {
         return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
@@ -273,7 +273,7 @@ public class GalerieFragmentZip extends Fragment implements Response.Listener<by
         requestPermissions(permissions, requestCode);
     }
 
-}
+}*/
 
 
 
