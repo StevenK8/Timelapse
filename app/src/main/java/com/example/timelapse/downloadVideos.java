@@ -2,10 +2,14 @@ package com.example.timelapse;
 
 import android.Manifest;
 import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -129,13 +133,14 @@ public class downloadVideos extends Fragment {
         String url = "https://fastapi.stevenkerautret.eu/video?id_album=" + albumNumber +"&access_token=F%3E%3Caw%3Bv)9H4JRY%3D4%23g%40%7DYN68b%24%256!j9F8g%3DV2%5EKr%5E8s%3A(%5BN7(%5D";
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-        request.setTitle(String.valueOf(albumNumber));
+        request.setTitle(String.valueOf(albumNumber) + ".mp4");
         request.setDescription("Downloading file ...");
         request.setMimeType("video/mp4");
         request.allowScanningByMediaScanner();
         request.setAllowedOverMetered(true);
+        request.setAllowedOverRoaming(true);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, ""+albumNumber);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, ""+albumNumber + ".mp4");
 
         DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
         downloadId = manager.enqueue(request);
@@ -148,7 +153,7 @@ public class downloadVideos extends Fragment {
             if (cursor.moveToFirst()) {
                 int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
                 switch (status) {
-                    case DownloadManager.STATUS_FAILED: {
+                    /*case DownloadManager.STATUS_FAILED: {
                         finishDownload = true;
                         break;
                     }
@@ -166,26 +171,23 @@ public class downloadVideos extends Fragment {
                             //  publishProgress((int) ((downloaded * 100L) / total));
                         }
                         break;
-                    }
+                    }*/
                     case DownloadManager.STATUS_SUCCESSFUL: {
                         progress = 100;
                         // if you use aysnc task
                         // publishProgress(100);
                         finishDownload = true;
-                        Toast.makeText(getActivity(), "Download Completed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Download Completed", Toast.LENGTH_SHORT).show();
 
-                        /*File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), albumNumber + ".mp4");
-                        File fileWithoutMp4 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), albumNumber+"");
+                        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), albumNumber + ".mp4");
                         if(file.exists()){
                             videoView.setVideoPath(file.getAbsolutePath());
                             videoView.start();
                         }
-                        else if(fileWithoutMp4.exists()){
-                            videoView.setVideoPath(file.getAbsolutePath());
-                            videoView.start();
-                        }*/
                         break;
                     }
+                    default:
+                        break;
                 }
             }
         }
