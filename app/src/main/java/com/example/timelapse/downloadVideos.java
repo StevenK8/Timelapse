@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ import java.util.Random;
 public class downloadVideos extends Fragment {
     View root;
     Button download;
+    private long downloadId;
 
     private static final int PERMISSION_STORAGE_CODE = 1000;
     ArrayList<Integer> timelapseNumber = new ArrayList<>();
@@ -129,21 +131,68 @@ public class downloadVideos extends Fragment {
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
         request.setTitle(String.valueOf(albumNumber));
         request.setDescription("Downloading file ...");
+        request.setMimeType("video/mp4");
         request.allowScanningByMediaScanner();
+        request.setAllowedOverMetered(true);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, ""+albumNumber);
 
         DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
-        manager.enqueue(request);
+        downloadId = manager.enqueue(request);
 
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), albumNumber + ".mp4");
-        if(file.exists()){
-            videoView.setVideoPath(file.getAbsolutePath());
-            videoView.start();
+        // using query method
+        boolean finishDownload = false;
+        int progress;
+        while (!finishDownload) {
+            Cursor cursor = manager.query(new DownloadManager.Query().setFilterById(downloadId));
+            if (cursor.moveToFirst()) {
+                int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+                switch (status) {
+                    case DownloadManager.STATUS_FAILED: {
+                        finishDownload = true;
+                        break;
+                    }
+                    case DownloadManager.STATUS_PAUSED:
+                        break;
+                    case DownloadManager.STATUS_PENDING:
+                        break;
+                    case DownloadManager.STATUS_RUNNING: {
+                        final long total = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                        if (total >= 0) {
+                            final long downloaded = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                            progress = (int) ((downloaded * 100L) / total);
+                            // if you use downloadmanger in async task, here you can use like this to display progress.
+                            // Don't forget to do the division in long to get more digits rather than double.
+                            //  publishProgress((int) ((downloaded * 100L) / total));
+                        }
+                        break;
+                    }
+                    case DownloadManager.STATUS_SUCCESSFUL: {
+                        progress = 100;
+                        // if you use aysnc task
+                        // publishProgress(100);
+                        finishDownload = true;
+                        Toast.makeText(getActivity(), "Download Completed", Toast.LENGTH_SHORT).show();
+
+                        /*File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), albumNumber + ".mp4");
+                        File fileWithoutMp4 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), albumNumber+"");
+                        if(file.exists()){
+                            videoView.setVideoPath(file.getAbsolutePath());
+                            videoView.start();
+                        }
+                        else if(fileWithoutMp4.exists()){
+                            videoView.setVideoPath(file.getAbsolutePath());
+                            videoView.start();
+                        }*/
+                        break;
+                    }
+                }
+            }
         }
-        /*System.out.println(Environment.DIRECTORY_DOWNLOADS + ""+albumNumber);
-        Uri uri = Uri.parse(Environment.DIRECTORY_DOWNLOADS + ""+albumNumber);
-       */
+
+
+
+
 
     }
 
