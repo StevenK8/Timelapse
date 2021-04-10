@@ -94,8 +94,8 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
         graph.getLegendRenderer().setFixedPosition(0,0);
 
         // Zooming and scrolling
-        //graph.getViewport().setScalable(true); // enables horizontal zooming and scrolling
-        //graph.getViewport().setScalableY(true); // enables vertical zooming and scrolling
+        graph.getViewport().setScalable(true); // enables horizontal zooming and scrolling
+        graph.getViewport().setScalableY(true); // enables vertical zooming and scrolling
         graph.getViewport().setScrollable(true); // enables horizontal scrolling
         graph.getViewport().setScrollableY(true); // enables vertical scrolling
 

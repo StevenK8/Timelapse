@@ -35,6 +35,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     private String urlAutoWhiteBalance = "autoWhiteBalance=";
     private String urlDescription = "description_album=";
     private String urlAccessToken = "access_token=!%24j%3B%2C%3DQzViep%5E%5CZP~9_pWg%5B%5B%7B8p*3d9ZP9NxxB5XFDNpB5Btv~";
+    private String urlStatus = "http://ryzen.ddns.net:8000/timelapse/status/?access_token=!%24j%3B%2C%3DQzViep%5E%5CZP~9_pWg%5B%5B%7B8p*3d9ZP9NxxB5XFDNpB5Btv~";
 
 
     EditText desc;
@@ -44,14 +45,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     EditText iso;
     EditText shutterSpeed;
     Switch autoWhiteBalance;
+    EditText Status;
+    Button b;
+
+    String status = "";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_home, container, false);
-        Button b = root.findViewById(R.id.boutonGo);
+        b = root.findViewById(R.id.boutonGo);
         b.setOnClickListener(this);
+        Button t = root.findViewById(R.id.test);
+        t.setOnClickListener(this);
 
         desc = root.findViewById(R.id.descriptionAlbum);
         longueur = root.findViewById(R.id.length);
@@ -63,7 +70,55 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
 
         EditText description = root.findViewById(R.id.descriptionAlbum);
+
+        Status = root.findViewById(R.id.status);
+        getStatus();
+        SetStatus(status);
+
         return root;
+    }
+
+    public void getStatus(){
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, urlStatus,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        status = response;
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(), "erreur", Toast.LENGTH_SHORT).show();
+                status = "erreur";
+            }
+        });
+        queue.add(stringRequest);
+        queue.start();
+    }
+
+    public void SetStatus(String status){
+        if(status.contains("photos")){
+            char[] charArray = status.toCharArray();
+            for(int i = 0; i < charArray.length; i++){
+                if(charArray[i] == '{'){
+                    charArray[i] = '\0';
+                }
+                if(charArray[i] == '\"'){
+                    charArray[i] = '\0';
+                }
+                if(charArray[i] == 'Â'){
+                    charArray[i] = '\0';
+                }
+            }
+            String sortie = String.valueOf(charArray);
+            Status.setText(sortie);
+            b.setClickable(false);
+        }
+        else{
+            Status.setText("pas de timelapse");
+            b.setClickable(true);
+        }
     }
 
     @Override
@@ -96,7 +151,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 });
                 queue.add(stringRequest);
                 queue.start();
+                getStatus();
+                SetStatus(status);
                 break;
+
+            case R.id.test:
+                getStatus();
+                SetStatus(status);
         }
     }
 
