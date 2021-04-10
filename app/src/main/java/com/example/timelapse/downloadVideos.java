@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.MediaController;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +35,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
@@ -48,12 +52,18 @@ public class downloadVideos extends Fragment {
     ListView listView;
     ArrayAdapter arrayAdapter;
 
+    VideoView videoView;
+    MediaController mediaController;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_galerie, container, false);
         listView = root.findViewById(R.id.list);
+        videoView = root.findViewById(R.id.videoView);
+        mediaController = new MediaController(getContext());
+        videoView.setMediaController(mediaController);
         getAlbums();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -125,6 +135,16 @@ public class downloadVideos extends Fragment {
 
         DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
         manager.enqueue(request);
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), albumNumber + ".mp4");
+        if(file.exists()){
+            videoView.setVideoPath(file.getAbsolutePath());
+            videoView.start();
+        }
+        /*System.out.println(Environment.DIRECTORY_DOWNLOADS + ""+albumNumber);
+        Uri uri = Uri.parse(Environment.DIRECTORY_DOWNLOADS + ""+albumNumber);
+       */
+
     }
 
 
