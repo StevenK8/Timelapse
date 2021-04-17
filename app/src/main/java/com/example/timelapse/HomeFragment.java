@@ -58,8 +58,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         root = inflater.inflate(R.layout.fragment_home, container, false);
         b = root.findViewById(R.id.boutonGo);
         b.setOnClickListener(this);
-        Button t = root.findViewById(R.id.test);
-        t.setOnClickListener(this);
 
         desc = root.findViewById(R.id.descriptionAlbum);
         longueur = root.findViewById(R.id.length);
@@ -119,7 +117,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             b.setClickable(false);
         }
         else{
-            Status.setText("pas de timelapse");
+            Status.setText("Timelapse off");
             b.setClickable(true);
         }
     }
@@ -157,11 +155,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 getStatus();
                 SetStatus(status);
                 Status.setText("timelapse démarré");
+                b.setClickable(false);
                 break;
-
-            case R.id.test:
-                getStatus();
-                SetStatus(status);
         }
     }
 
