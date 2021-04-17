@@ -1,6 +1,7 @@
 package com.example.timelapse;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,6 +76,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         getStatus();
         SetStatus(status);
 
+        myHandler = new Handler();
+        myHandler.postDelayed(myRunnable,5000); // on redemande toute les 500ms
+
         return root;
     }
 
@@ -89,7 +93,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(), "erreur", Toast.LENGTH_SHORT).show();
                 status = "erreur";
             }
         });
@@ -153,6 +156,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 queue.start();
                 getStatus();
                 SetStatus(status);
+                Status.setText("timelapse démarré");
                 break;
 
             case R.id.test:
@@ -183,5 +187,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         if(shutterSpeed.getText().equals("")){
             shutterSpeed.setText("0");
         }
+    }
+
+    private Handler myHandler;
+    private Runnable myRunnable = new Runnable() {
+        @Override
+        public void run() {
+            // Code à éxécuter de façon périodique
+            getStatus();
+            SetStatus(status);
+            myHandler.postDelayed(this,5000);
+        }
+    };
+
+    public void onPause() {
+        super.onPause();
+        if(myHandler != null)
+            myHandler.removeCallbacks(myRunnable); // On arrete le callback
     }
 }
