@@ -191,11 +191,6 @@ public class downloadVideos extends Fragment {
                 }
             }
         }
-
-
-
-
-
     }
 
 

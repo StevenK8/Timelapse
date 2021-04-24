@@ -6,4 +6,16 @@
     <string name="boutonLancement">Demarrer timelapse</string>
     <string name="Hintdatedeb">Date debut</string>
     <string name="Hintdatefin">Date fin</string>
+    <string name="boutonstop">STOPPER TIMELAPSE</string>
+    <string name="actualiser">Actualiser</string>
+    <string name="_1">1</string>
+    <string name="description">Description</string>
+    <string name="shutterspeed">ShutterSpeed</string>
+    <string name="rotation">Rotation</string>
+    <string name="interval">Interval</string>
+    <string name="duree">Durée</string>
+    <string name="iso">Iso</string>
+    <string name="vacances">Vacances</string>
+    <string name="_0">0</string>
+    <string name="auto_white_balance">Auto White Balance</string>
 </resources>

@@ -37,6 +37,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     private String urlDescription = "description_album=";
     private String urlAccessToken = "access_token=!%24j%3B%2C%3DQzViep%5E%5CZP~9_pWg%5B%5B%7B8p*3d9ZP9NxxB5XFDNpB5Btv~";
     private String urlStatus = "http://ryzen.ddns.net:8000/timelapse/status/?access_token=!%24j%3B%2C%3DQzViep%5E%5CZP~9_pWg%5B%5B%7B8p*3d9ZP9NxxB5XFDNpB5Btv~";
+    private String urlStopTimelapse = "http://ryzen.ddns.net:8000/timelapse/stop/?access_token=!%24j%3B%2C%3DQzViep%5E%5CZP~9_pWg%5B%5B%7B8p*3d9ZP9NxxB5XFDNpB5Btv~";
 
 
     EditText desc;
@@ -48,6 +49,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     Switch autoWhiteBalance;
     EditText Status;
     Button b;
+    Button s;
 
     String status = "";
 
@@ -58,6 +60,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         root = inflater.inflate(R.layout.fragment_home, container, false);
         b = root.findViewById(R.id.boutonGo);
         b.setOnClickListener(this);
+        s = root.findViewById(R.id.boutonStop);
+        s.setOnClickListener(this);
 
         desc = root.findViewById(R.id.descriptionAlbum);
         longueur = root.findViewById(R.id.length);
@@ -115,10 +119,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
             String sortie = String.valueOf(charArray);
             Status.setText(sortie);
             b.setClickable(false);
+            s.setClickable(true);
         }
         else{
             Status.setText("Timelapse off");
             b.setClickable(true);
+            s.setClickable(false);
         }
     }
 
@@ -152,11 +158,30 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 });
                 queue.add(stringRequest);
                 queue.start();
-                getStatus();
-                SetStatus(status);
-                Status.setText("timelapse démarré");
+                Status.setText("timelapse on");
                 b.setClickable(false);
+                s.setClickable(true);
                 break;
+
+            case R.id.boutonStop:
+                RequestQueue queue2 = Volley.newRequestQueue(getContext());
+                StringRequest stringRequest2 = new StringRequest(Request.Method.GET, urlStopTimelapse,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Toast.makeText(getContext(), response.toString(), Toast.LENGTH_SHORT).show();
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getContext(), "erreur", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                queue2.add(stringRequest2);
+                queue2.start();
+                Status.setText("timelapse stoppé");
+                b.setClickable(true);
+                s.setClickable(false);
         }
     }
 
