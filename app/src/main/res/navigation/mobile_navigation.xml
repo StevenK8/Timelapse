@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.timelapse.ui.home.HomeFragment"
+        android:name="com.example.timelapse.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_graphique"
-        android:name="com.example.timelapse.ui.graphique.GraphiqueFragment"
+        android:name="com.example.timelapse.GraphiqueFragment"
         android:label="@string/title_graphique"
         tools:layout="@layout/fragment_graphique" />
 
     <fragment
         android:id="@+id/navigation_galerie"
-        android:name="com.example.timelapse.ui.galerie.GalerieFragment"
+        android:name="com.example.timelapse.downloadVideos"
         android:label="@string/title_galerie"
         tools:layout="@layout/fragment_galerie" />
 

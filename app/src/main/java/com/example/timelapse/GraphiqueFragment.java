@@ -78,7 +78,7 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
 
         graph = root.findViewById(R.id.graph);
 
-
+        //parametrage du graphique
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinY(0);
@@ -138,7 +138,7 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
         return str;
     }
 
-    public DataPoint[] generateData(ArrayList<Float> list) {
+    public DataPoint[] generateData(ArrayList<Float> list) { //genere les points pour mettre sur le graphe
         DataPoint[] values = new DataPoint[list.size()];
         for(int i = 0; i < list.size(); i++){
             int x = i;

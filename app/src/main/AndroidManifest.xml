@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Timelapse"
         android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true">
+        android:requestLegacyExternalStorage="true"
+        >
+
 
         <activity
             android:name=".MainActivity"

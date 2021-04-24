@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="downloadVideos"
-    android:background="@drawable/fondappli">
+    android:background="@drawable/fondappli"
+    android:screenOrientation="portrait">
 
 
     <ListView

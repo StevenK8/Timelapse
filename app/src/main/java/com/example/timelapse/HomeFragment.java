@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -84,7 +85,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         return root;
     }
 
-    public void getStatus(){
+    public void getStatus(){ // recuperer le statut du timelapse on ou off
         RequestQueue queue = Volley.newRequestQueue(getContext());
         StringRequest stringRequest = new StringRequest(Request.Method.GET, urlStatus,
                 new Response.Listener<String>() {
@@ -102,9 +103,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         queue.start();
     }
 
-    public void SetStatus(String status){
+    public void SetStatus(String status){ //permet de mettre le statut du timelapse dans l'appli
         if(status.contains("photos")){
-            char[] charArray = status.toCharArray();
+            char[] charArray = status.toCharArray(); //transformation de la réponse pour l'affichage
             for(int i = 0; i < charArray.length; i++){
                 if(charArray[i] == '{'){
                     charArray[i] = '\0';
@@ -117,7 +118,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 }
             }
             String sortie = String.valueOf(charArray);
-            Status.setText(sortie);
+            Status.setText(sortie); //affichage du statut + blocage ou deblocage des boutons
             b.setClickable(false);
             s.setClickable(true);
         }
@@ -131,8 +132,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         switch(v.getId()){
-            case R.id.boutonGo:
-                checkFieldsValues();
+            case R.id.boutonGo: //lancement de la requete de start
+                checkFieldsValues(); //si les champs sont correctement remplis
 
                 RequestQueue queue = Volley.newRequestQueue(getContext());
                 String urlLancement = url + urlStartTimelapse + "?" + urlLongueur + longueur.getText()
@@ -163,7 +164,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 s.setClickable(true);
                 break;
 
-            case R.id.boutonStop:
+            case R.id.boutonStop: //arret du timelapse sur demande
                 RequestQueue queue2 = Volley.newRequestQueue(getContext());
                 StringRequest stringRequest2 = new StringRequest(Request.Method.GET, urlStopTimelapse,
                         new Response.Listener<String>() {
@@ -185,7 +186,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    private void checkFieldsValues(){
+    private void checkFieldsValues(){ //permet de verifier que les champs sont correctement rempli
         if(desc.getText().equals("")){
             desc.setText("Timelapse");
         }
@@ -209,7 +210,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    private Handler myHandler;
+    private Handler myHandler;  // permet d'executer une partie du code de façon périodique
     private Runnable myRunnable = new Runnable() {
         @Override
         public void run() {

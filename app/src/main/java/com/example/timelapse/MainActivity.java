@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) { //permet la creation de la barre de navigation
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -33,7 +33,9 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment selectedFragment = null;
 
-            switch (item.getItemId()){
+            switch (item.getItemId()){ //selection du fragment souhaité
+                default:
+                    selectedFragment = new HomeFragment();
                 case R.id.nav_home:
                     selectedFragment = new HomeFragment();
                     break;
