@@ -25,8 +25,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
+import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -95,7 +97,7 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
 
         // Zooming and scrolling
         graph.getViewport().setScalable(true); // enables horizontal zooming and scrolling
-        graph.getViewport().setScalableY(true); // enables vertical zooming and scrolling
+        graph.getViewport().setScalableY(false); // enables vertical zooming and scrolling
         graph.getViewport().setScrollable(true); // enables horizontal scrolling
         graph.getViewport().setScrollableY(true); // enables vertical scrolling
 
@@ -138,32 +140,72 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
         return str;
     }
 
-    public DataPoint[] generateData(ArrayList<Float> list) { //genere les points pour mettre sur le graphe
+    public Date parseDate3(String time) { // changement du format de la date pour l'affichage
+        String inputPattern = "yyyy-MM-dd'T'HH:mm:ss";
+        String outputPattern = "dd/MM/yyyy HH:mm:ss";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+        Date date = null;
+        String str = null;
+
+        try {
+            date = inputFormat.parse(time);
+            str = outputFormat.format(date);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            date = sdf.parse(str);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+
+    public DataPoint[] generateData(ArrayList<Float> list, ArrayList<String> listdate) { //genere les points pour mettre sur le graphe
         DataPoint[] values = new DataPoint[list.size()];
         for(int i = 0; i < list.size(); i++){
-            int x = i;
+            Date x = parseDate3(listdate.get(i));
             float y = list.get(i);
             DataPoint v = new DataPoint(x, y);
             values[i] = v;
         }
         return values;
     }
-    public void traceGraph(ArrayList<Float> temperatureList, ArrayList<Float> humiditeList){ //permet de tracer les lines du graphs
+    public void traceGraph(ArrayList<Float> temperatureList, ArrayList<Float> humiditeList, ArrayList<String> dateList){ //permet de tracer les lines du graphs
         graph.removeSeries(tempserie);
         if(temperatureList.size()> 0){
-            tempserie.resetData(generateData(temperatureList));
+            tempserie.resetData(generateData(temperatureList, dateList));
             /*for(int i = 0; i < temperatureList.size(); i++){
                 tempserie.appendData(new DataPoint(i,temperatureList.get(i)),true,temperatureList.size());
             }*/
             graph.addSeries(tempserie);
             tempserie.setTitle("température");
+            graph.getGridLabelRenderer().setTextSize(30);
+            graph.getGridLabelRenderer().setPadding(10);
+            graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter(){
+                @Override
+                public String formatLabel(double value, boolean isValueX) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM-hh:mm");
+                    if(isValueX){
+                        return sdf.format(new Date((long) value));
+                    }
+                    else{
+                        return super.formatLabel(value, isValueX);
+                    }
+
+                }
+            });
+            graph.getGridLabelRenderer().setHumanRounding(false);
+            graph.getViewport().setXAxisBoundsManual(false);
+            //graph.getViewport().setMinX(parseDate3(dateList.get(0)).getTime());
+           // graph.getViewport().setMaxX(parseDate3(dateList.get(dateList.size()-1)).getTime());
             graph.getViewport().setMinY(Collections.min(temperatureList));
             graph.getViewport().setMaxY(Collections.max(temperatureList));
+            graph.getGridLabelRenderer().setNumHorizontalLabels(4);
         }
 
         graph.getSecondScale().removeSeries(humidserie);
         if(humiditeList.size() > 0){
-            humidserie.resetData(generateData(humiditeList));
+            humidserie.resetData(generateData(humiditeList, dateList));
             /*for(int i = 0; i < humiditeList.size(); i++){
                 humidserie.appendData(new DataPoint(i,humiditeList.get(i)),true,humiditeList.size());
             }*/
@@ -173,7 +215,7 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
             graph.getSecondScale().setMinY(Collections.min(humiditeList));
             graph.getSecondScale().setMaxY(Collections.max(humiditeList));
             graph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(Color.RED);
-            graph.getViewport().setMaxX(humiditeList.size());
+
         }
 
     }
@@ -216,7 +258,7 @@ public class GraphiqueFragment extends Fragment implements View.OnClickListener{
                 });
                 queue.add(stringRequest);
                 queue.start();
-                traceGraph(temperatureList, humiditeList);
+                traceGraph(temperatureList, humiditeList, dateList);
                 break;
 
             //generation des calendriers
